@@ -3,6 +3,7 @@ import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/screens/add_screen/add_desk_screen.dart';
 import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_screen.dart';
+import 'package:mobile_app/screens/login_screen/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,12 +40,13 @@ void main() {
 //  -show orders screen: -> *can see all orders
 //                       -> *can pay order
 
-// TODO: create "Add/Update Screen" for each data model
 // TODO: create "Login Screen"
 // TODO: update Desk to store the room id, and remove deskList from Room
 // TODO:
 
 // TODO: target -> be able to create full flows:
+// TODO: create the logic then create the screens
+// TODO: create the endpoint/request service first -> repo -> vm -> screen
 // Create account
 
 // Login as User -> check room -> select desk -> get desk request
@@ -76,6 +78,7 @@ class MyApp extends StatelessWidget {
         cardColor: Colors.blue.shade300,
       ),
       home: const MyHomePage(title: "Home Page"),
+      // home: const LoginScreen(),
     );
   }
 }
@@ -103,32 +106,32 @@ class _MyHomePageState extends State<MyHomePage> {
               const Divider(height: 5, color: Colors.white),
               _drawerButton(
                 () => _openBaseListScreen(ModelType.desk),
-                "Desk List Screen",
+                ModelMapper.screenTitle(ModelType.desk),
               ),
               const Divider(height: 2, color: Colors.white),
               _drawerButton(
                 () => _openBaseListScreen(ModelType.deskRequest),
-                "DeskRequest List Screen",
+                ModelMapper.screenTitle(ModelType.deskRequest),
               ),
               const Divider(height: 2, color: Colors.white),
               _drawerButton(
                 () => _openBaseListScreen(ModelType.order),
-                "Order List Screen",
+                ModelMapper.screenTitle(ModelType.order),
               ),
               const Divider(height: 2, color: Colors.white),
               _drawerButton(
                 () => _openBaseListScreen(ModelType.room),
-                "Room List Screen",
+                ModelMapper.screenTitle(ModelType.room),
               ),
               const Divider(height: 2, color: Colors.white),
               _drawerButton(
                 () => _openBaseListScreen(ModelType.user),
-                "User List Screen",
+                ModelMapper.screenTitle(ModelType.user),
               ),
               const Divider(height: 2, color: Colors.white),
               _drawerButton(
                 () => _openBaseListScreen(ModelType.waitingPerson),
-                "WaitingPerson List Screen",
+                ModelMapper.screenTitle(ModelType.waitingPerson),
               ),
             ],
           ),
@@ -144,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _titleWidget(String text) {
     return Container(
       color: Colors.blue,
-      height: 50,
+      height: 60,
       padding: const EdgeInsets.only(left: 10),
       width: double.infinity,
       child: Align(
@@ -173,7 +176,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _drawerButton(VoidCallback? onTap, String text) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        Navigator.of(context).pop();
+        onTap?.call();
+      },
       child: Ink(
         color: Colors.blue,
         height: 50,

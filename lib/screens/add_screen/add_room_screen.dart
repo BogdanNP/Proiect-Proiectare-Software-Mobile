@@ -35,7 +35,7 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.room != null ? "Update " : "Add "}Desk Screen"),
+        title: Text("${widget.room != null ? "Update " : "Add New "}Room"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

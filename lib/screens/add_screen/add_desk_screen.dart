@@ -37,7 +37,7 @@ class _AddDeskScreenState extends State<AddDeskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.desk != null ? "Update " : "Add "}Desk Screen"),
+        title: Text("${widget.desk != null ? "Update " : "Add New "}Desk"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

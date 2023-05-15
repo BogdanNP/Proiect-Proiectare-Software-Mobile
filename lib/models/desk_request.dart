@@ -7,7 +7,7 @@ class DeskRequest extends BaseModel {
   final int? deskId;
   final DateTime? startDate;
   final DateTime? endDate;
-  final DeskStatus? deskStatus;
+  final DeskRequestStatus? deskStatus;
 
   DeskRequest({
     required this.id,
@@ -36,7 +36,7 @@ class DeskRequest extends BaseModel {
     int? deskId,
     DateTime? startDate,
     DateTime? endDate,
-    DeskStatus? deskStatus,
+    DeskRequestStatus? deskStatus,
   }) {
     return DeskRequest(
       id: id ?? this.id,
@@ -78,31 +78,31 @@ class DeskRequest extends BaseModel {
   }
 }
 
-enum DeskStatus {
+enum DeskRequestStatus {
   reserved,
-  available,
-  unknown,
+  current,
+  finished,
 }
 
-extension DeskStatusExtension on DeskStatus {
-  static DeskStatus? fromString(String? v) {
+extension DeskStatusExtension on DeskRequestStatus {
+  static DeskRequestStatus? fromString(String? v) {
     if (v == "RESERVED") {
-      return DeskStatus.reserved;
+      return DeskRequestStatus.reserved;
     }
-    if (v == "AVAILABLE") {
-      return DeskStatus.available;
+    if (v == "CURRENT") {
+      return DeskRequestStatus.current;
     }
-    return DeskStatus.unknown;
+    return DeskRequestStatus.finished;
   }
 
   String get stringValue {
     switch (this) {
-      case DeskStatus.reserved:
+      case DeskRequestStatus.reserved:
         return "reserved";
-      case DeskStatus.available:
-        return "available";
-      case DeskStatus.unknown:
-        return "unknown";
+      case DeskRequestStatus.current:
+        return "current";
+      case DeskRequestStatus.finished:
+        return "finished";
     }
   }
 }

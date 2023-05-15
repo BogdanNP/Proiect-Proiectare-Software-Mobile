@@ -20,7 +20,7 @@ class _AddDeskRequestScreenState extends State<AddDeskRequestScreen> {
   late TextEditingController _deskIdController;
   late TextEditingController _startDateController;
   late TextEditingController _endDateController;
-  late DeskStatus _selectedStatus;
+  late DeskRequestStatus _selectedStatus;
 
   @override
   initState() {
@@ -33,7 +33,8 @@ class _AddDeskRequestScreenState extends State<AddDeskRequestScreen> {
         text: widget.deskRequest?.startDate?.toString() ?? "");
     _endDateController = TextEditingController(
         text: widget.deskRequest?.endDate?.toString() ?? "");
-    _selectedStatus = widget.deskRequest?.deskStatus ?? DeskStatus.unknown;
+    _selectedStatus =
+        widget.deskRequest?.deskStatus ?? DeskRequestStatus.finished;
   }
 
   @override
@@ -78,17 +79,17 @@ class _AddDeskRequestScreenState extends State<AddDeskRequestScreen> {
               decoration: const InputDecoration(
                 label: Text("desk status"),
               ),
-              items: DeskStatus.values
+              items: DeskRequestStatus.values
                   .map(
-                    (e) => DropdownMenuItem<DeskStatus>(
+                    (e) => DropdownMenuItem<DeskRequestStatus>(
                       value: e,
                       child: Text(e.stringValue),
                     ),
                   )
                   .toList(),
-              onChanged: (DeskStatus? value) {
+              onChanged: (DeskRequestStatus? value) {
                 setState(() {
-                  _selectedStatus = value ?? DeskStatus.unknown;
+                  _selectedStatus = value ?? DeskRequestStatus.finished;
                 });
               },
             ),

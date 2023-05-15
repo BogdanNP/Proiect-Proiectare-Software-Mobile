@@ -37,7 +37,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.order != null ? "Update " : "Add "}Desk Screen"),
+        title: Text("${widget.order != null ? "Update " : "Add New "}Order"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

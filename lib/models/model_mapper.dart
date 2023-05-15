@@ -45,17 +45,17 @@ abstract class ModelMapper {
   static String screenTitle(ModelType modelType) {
     switch (modelType) {
       case ModelType.desk:
-        return "Desk List Screen";
+        return "Desk List";
       case ModelType.deskRequest:
-        return "Desk Request List Screen";
+        return "Desk Request List";
       case ModelType.order:
-        return "Order List Screen";
+        return "Order List";
       case ModelType.room:
-        return "Room List Screen";
+        return "Room List";
       case ModelType.user:
-        return "User List Screen";
+        return "User List";
       case ModelType.waitingPerson:
-        return "Waiting List Screen";
+        return "Waiting List";
     }
   }
 }

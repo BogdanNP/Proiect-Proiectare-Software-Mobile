@@ -33,7 +33,7 @@ class _AddWaitingPersonScreenState extends State<AddWaitingPersonScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "${widget.waitingPerson != null ? "Update " : "Add "}Desk Screen"),
+            "${widget.waitingPerson != null ? "Update " : "Add New "}Waiting Person"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

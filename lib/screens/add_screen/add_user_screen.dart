@@ -33,7 +33,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.user != null ? "Update " : "Add "}Desk Screen"),
+        title: Text("${widget.user != null ? "Update " : "Add New "}User"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
