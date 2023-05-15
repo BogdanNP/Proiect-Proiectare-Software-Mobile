@@ -6,12 +6,14 @@ import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/order.dart';
 import 'package:mobile_app/models/room.dart';
 import 'package:mobile_app/models/user.dart';
+import 'package:mobile_app/models/waiting_person.dart';
 import 'package:mobile_app/screens/add_screen/add_desk_screen.dart';
 import 'package:mobile_app/screens/add_screen/add_room_screen.dart';
 
 import 'add_desk_request_screen.dart';
 import 'add_order_screen.dart';
 import 'add_user_screen.dart';
+import 'add_waiting_person_screen.dart';
 
 class BaseAddScreen extends StatelessWidget {
   final BaseModel? object;
@@ -54,12 +56,10 @@ class BaseAddScreen extends StatelessWidget {
           user: object as User?,
         );
       case ModelType.waitingPerson:
-        // TODO: Handle this case.
-        break;
+        return AddWaitingPersonScreen(
+          saveWaitingPerson: saveObject,
+          waitingPerson: object as WaitingPerson?,
+        );
     }
-    return AddDeskScreen(
-      saveDesk: saveObject,
-      desk: object as Desk?,
-    );
   }
 }

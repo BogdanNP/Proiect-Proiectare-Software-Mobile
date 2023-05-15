@@ -92,38 +92,99 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SafeArea(
+        child: Drawer(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _titleWidget(
+                "Hello, User!",
+              ),
+              const Divider(height: 5, color: Colors.white),
+              _drawerButton(
+                () => _openBaseListScreen(ModelType.desk),
+                "Desk List Screen",
+              ),
+              const Divider(height: 2, color: Colors.white),
+              _drawerButton(
+                () => _openBaseListScreen(ModelType.deskRequest),
+                "DeskRequest List Screen",
+              ),
+              const Divider(height: 2, color: Colors.white),
+              _drawerButton(
+                () => _openBaseListScreen(ModelType.order),
+                "Order List Screen",
+              ),
+              const Divider(height: 2, color: Colors.white),
+              _drawerButton(
+                () => _openBaseListScreen(ModelType.room),
+                "Room List Screen",
+              ),
+              const Divider(height: 2, color: Colors.white),
+              _drawerButton(
+                () => _openBaseListScreen(ModelType.user),
+                "User List Screen",
+              ),
+              const Divider(height: 2, color: Colors.white),
+              _drawerButton(
+                () => _openBaseListScreen(ModelType.waitingPerson),
+                "WaitingPerson List Screen",
+              ),
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () => _openBaseListScreen(ModelType.desk),
-              child: const Text("Desk List Screen"),
+      body: Center(),
+    );
+  }
+
+  Widget _titleWidget(String text) {
+    return Container(
+      color: Colors.blue,
+      height: 50,
+      padding: const EdgeInsets.only(left: 10),
+      width: double.infinity,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(fontSize: 30),
             ),
-            ElevatedButton(
-              onPressed: () => _openBaseListScreen(ModelType.deskRequest),
-              child: const Text("DeskRequest List Screen"),
-            ),
-            ElevatedButton(
-              onPressed: () => _openBaseListScreen(ModelType.order),
-              child: const Text("Order List Screen"),
-            ),
-            ElevatedButton(
-              onPressed: () => _openBaseListScreen(ModelType.room),
-              child: const Text("Room List Screen"),
-            ),
-            ElevatedButton(
-              onPressed: () => _openBaseListScreen(ModelType.user),
-              child: const Text("User List Screen"),
-            ),
-            ElevatedButton(
-              onPressed: () => _openBaseListScreen(ModelType.waitingPerson),
-              child: const Text("WaitingPerson List Screen"),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+              ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _drawerButton(VoidCallback? onTap, String text) {
+    return InkWell(
+      onTap: onTap,
+      child: Ink(
+        color: Colors.blue,
+        height: 50,
+        padding: const EdgeInsets.only(left: 10),
+        width: double.infinity,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 18),
+          ),
         ),
       ),
     );

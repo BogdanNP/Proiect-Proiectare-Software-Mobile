@@ -5,6 +5,7 @@ import 'package:mobile_app/models/desk_request.dart';
 import 'package:mobile_app/models/order.dart';
 import 'package:mobile_app/models/room.dart';
 import 'package:mobile_app/models/user.dart';
+import 'package:mobile_app/models/waiting_person.dart';
 
 abstract class ModelMapper {
   static BaseModel mapTo(Map<String, dynamic> json, ModelType type) {
@@ -20,10 +21,8 @@ abstract class ModelMapper {
       case ModelType.user:
         return User.fromJson(json);
       case ModelType.waitingPerson:
-        // TODO: Handle this case.
-        break;
+        return WaitingPerson.fromJson(json);
     }
-    return Desk.fromJson(json);
   }
 
   static String getPath(ModelType type) {
