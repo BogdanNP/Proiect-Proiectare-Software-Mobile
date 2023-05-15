@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/models/base_model.dart';
-import 'package:mobile_app/models/desk.dart';
-import 'package:mobile_app/models/desk_request.dart';
 import 'package:mobile_app/models/model_mapper.dart';
-import 'package:mobile_app/models/order.dart';
-import 'package:mobile_app/models/room.dart';
 import 'package:mobile_app/models/ui_model.dart';
-import 'package:mobile_app/models/user.dart';
-import 'package:mobile_app/screens/add_screen/add_desk_screen.dart';
 import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_view_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -86,12 +80,6 @@ class _BaseListScreenState<T extends BaseModel> extends State<BaseListScreen> {
                               child: const Text("Refresh"),
                               onPressed: () => vm.input.onStart.add(true),
                             ),
-                            // ElevatedButton(
-                            //   child: const Text("Update First"),
-                            //   onPressed: () => vm.input.onUpdate.add(
-                            //     baseModelList.first,
-                            //   ),
-                            // ),
                             ElevatedButton(
                                 child: const Text("Add New"),
                                 onPressed: () {
@@ -132,50 +120,6 @@ class _BaseListScreenState<T extends BaseModel> extends State<BaseListScreen> {
     );
   }
 
-  BaseModel _getNewObject() {
-    switch (widget.modelType) {
-      case ModelType.desk:
-        return Desk(
-          id: 0,
-          width: 100,
-          length: 100,
-          height: 100,
-          tariff: 100.0,
-          tariffType: TariffType.day,
-        );
-      case ModelType.deskRequest:
-        return DeskRequest(
-          id: 0,
-          userId: 2,
-          deskId: 2,
-          startDate: DateTime.now(),
-          endDate: DateTime.now(),
-          deskStatus: DeskStatus.reserved,
-        );
-      case ModelType.order:
-        return Order(
-          id: 1,
-          userId: 2,
-          deskId: 2,
-          total: 100,
-          orderStatus: OrderStatus.newOrder,
-        );
-      case ModelType.room:
-        return Room(
-          id: 1,
-          width: 100,
-          length: 100,
-          details: "Large Room",
-        );
-      case ModelType.user:
-        return User(id: 1, type: UserType.guest, username: "Guest1");
-      case ModelType.waitingPerson:
-        // TODO: Handle this case.
-        break;
-    }
-    return Desk(id: 0);
-  }
-
   void _openUpdateScreen({BaseModel? object}) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -190,9 +134,6 @@ class _BaseListScreenState<T extends BaseModel> extends State<BaseListScreen> {
       ),
     );
   }
-
-// Widget _deskCell(BaseModel desk) {}
-
 }
 
 class BaseTitleWidget extends StatelessWidget {
