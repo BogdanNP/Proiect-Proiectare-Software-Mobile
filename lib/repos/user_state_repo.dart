@@ -32,6 +32,12 @@ class UserStateRepo {
     );
   }
 
+  Stream<bool> removeUser() {
+    return _getPreferences().flatMap(
+      (preferences) => preferences.remove("user").asStream(),
+    );
+  }
+
   Stream<SharedPreferences> _getPreferences() async* {
     _sharedPreferences ??= await SharedPreferences.getInstance();
     yield _sharedPreferences!;

@@ -6,6 +6,8 @@ import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_view_model.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'list_title_widget.dart';
+
 class BaseListScreen<T extends BaseModel> extends StatefulWidget {
   final ModelType modelType;
   const BaseListScreen({
@@ -133,16 +135,6 @@ class _BaseListScreenState<T extends BaseModel> extends State<BaseListScreen> {
         },
       ),
     );
-  }
-}
-
-class BaseTitleWidget extends StatelessWidget {
-  final ModelType modelType;
-  const BaseTitleWidget(this.modelType, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(ModelMapper.screenTitle(modelType));
   }
 }
 

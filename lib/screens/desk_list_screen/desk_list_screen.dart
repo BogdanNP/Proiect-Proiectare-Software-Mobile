@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/desk.dart';
 import 'package:mobile_app/models/ui_model.dart';
+import 'package:mobile_app/screens/base_list_screen/base_list_view_model.dart';
+import 'package:mobile_app/screens/base_list_screen/list_title_widget.dart';
 import 'package:rxdart/rxdart.dart';
-import 'desk_list_view_model.dart';
 
 class DeskListScreen extends StatefulWidget {
-  const DeskListScreen({Key? key}) : super(key: key);
+  const DeskListScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DeskListScreen> createState() => _DeskListScreenState();
@@ -13,7 +17,7 @@ class DeskListScreen extends StatefulWidget {
 
 class _DeskListScreenState extends State<DeskListScreen> {
   late List<Desk> deskList = [];
-  late DeskListViewModel vm;
+  late BaseListViewModel<Desk> vm;
   bool isError = false;
   bool isLoading = false;
 
@@ -21,28 +25,34 @@ class _DeskListScreenState extends State<DeskListScreen> {
   initState() {
     super.initState();
 
-    vm = DeskListViewModel(
+    vm = BaseListViewModel<Desk>(
       Input(
         PublishSubject(),
         PublishSubject(),
         PublishSubject(),
         PublishSubject(),
       ),
+      ModelType.desk,
     );
     vm.output.onStart.listen((data) {
       setState(() {
         debugPrint("${data.state}");
         switch (data.state) {
           case UIState.success:
-            deskList = data.data ?? [];
+            deskList = (data.data!.map((e) => e as Desk).toList());
             isLoading = false;
             isError = false;
             break;
           case UIState.error:
+            debugPrint("${data.error}");
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Error: ${data.error}")));
             isError = true;
             isLoading = false;
             break;
           case UIState.loading:
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(SnackBar(content: Text("Loading...")));
             isLoading = true;
             break;
         }
@@ -55,7 +65,7 @@ class _DeskListScreenState extends State<DeskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Desk List Screen"),
+        title: const BaseTitleWidget(ModelType.desk),
       ),
       body: !isError
           ? Stack(
@@ -72,29 +82,17 @@ class _DeskListScreenState extends State<DeskListScreen> {
                               child: const Text("Refresh"),
                               onPressed: () => vm.input.onStart.add(true),
                             ),
-                            ElevatedButton(
-                              child: const Text("Add Desk"),
-                              onPressed: () => vm.input.onSaveDesk.add(
-                                Desk(
-                                  id: 0,
-                                  width: 100,
-                                  length: 100,
-                                  height: 100,
-                                  tariff: 100.0,
-                                  tariffType: TariffType.day,
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              child: const Text("Update Desk"),
-                              onPressed: () => vm.input.onUpdateDesk.add(
-                                deskList.first.copyWith(length: 300),
-                              ),
-                            ),
                           ],
                         ),
                       ),
-                      ...deskList.map((e) => _deskCell(e)),
+                      ...deskList.map(
+                        (e) => DeskCell(
+                          desk: e,
+                          onTap: () {
+                            debugPrint("open desk request screen");
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -117,36 +115,33 @@ class _DeskListScreenState extends State<DeskListScreen> {
             ),
     );
   }
+}
 
-  Widget _deskCell(Desk desk) {
-    return Container(
-      width: double.infinity,
-      color: Colors.green,
+class DeskCell extends StatelessWidget {
+  final VoidCallback? onTap;
+  final Desk desk;
+
+  const DeskCell({
+    Key? key,
+    required this.desk,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
       padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              Text("id: ${desk.id}"),
-              Text("\$${desk.tariff}/${desk.tariffType?.stringValue}"),
-              Text("W: ${desk.width}"),
-              Text("L: ${desk.length}"),
-              Text("H: ${desk.height}"),
-            ],
+      child: InkWell(
+        onTap: onTap,
+        child: Ink(
+          width: double.infinity,
+          color: Theme.of(context).cardColor,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: desk.getDisplayData().map((t) => Text(t)).toList(),
           ),
-          Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  vm.input.onDeleteDesk.add(desk);
-                },
-                child: const Text("Delete"),
-              ),
-            ],
-          )
-        ],
+        ),
       ),
     );
   }

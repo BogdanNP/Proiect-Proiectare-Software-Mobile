@@ -11,22 +11,36 @@ class HomeScreenViewModel {
   Stream<User?> _userStream() => _userStateRepo.getUser();
 
   HomeScreenViewModel(this.input) : _userStateRepo = UserStateRepo() {
+    Stream<UIModel<User?>> onLogout = input.onLogout.flatMap((_) {
+      return _userStateRepo.removeUser().map(
+            (_) => UIModel.success(User(id: -1, type: UserType.guest)),
+          );
+    });
+
+    Stream<UIModel<User?>> onStart = input.onStart
+        .flatMap(
+          (_) => _userStream().map(
+            (user) => UIModel.success(user),
+          ),
+        )
+        .startWith(UIModel.loading())
+        .onErrorReturnWith((error, _) => UIModel.error(error));
+
+    Stream<UIModel<User?>> onUserChange = Rx.merge([onStart, onLogout]);
+
     output = Output(
-      input.onStart
-          .flatMap(
-            (_) => _userStream().map(
-              (user) => UIModel.success(user),
-            ),
-          )
-          .startWith(UIModel.loading())
-          .onErrorReturnWith((error, _) => UIModel.error(error)),
+      onUserChange,
     );
   }
 }
 
 class Input {
+  final Subject<bool> onLogout;
   final Subject<bool> onStart;
-  Input(this.onStart);
+  Input(
+    this.onStart,
+    this.onLogout,
+  );
 }
 
 class Output {

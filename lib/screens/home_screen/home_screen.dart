@@ -7,6 +7,7 @@ import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_screen.dart';
 import 'package:mobile_app/screens/home_screen/home_screen_view_model.dart';
 import 'package:mobile_app/screens/login_screen/login_screen.dart';
+import 'package:mobile_app/screens/room_list_screen/room_list_screen.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -24,7 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   initState() {
     super.initState();
-    _vm = HomeScreenViewModel(Input(PublishSubject()));
+    _vm = HomeScreenViewModel(Input(
+      PublishSubject(),
+      PublishSubject(),
+    ));
 
     _vm.output.onStart.listen((event) {
       setState(() {
@@ -53,24 +57,26 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(widget.title),
+            _loginLogoutButton(),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
           children: [
-            if (user.type == UserType.guest)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const LoginScreen();
-                      },
-                    ),
-                  ).then((_) => _vm.input.onStart.add(true));
-                },
-                child: const Text("Login now"),
-              ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return const RoomListScreen();
+                }));
+              },
+              child: const Text("Room List"),
+            ),
           ],
         ),
       ),
@@ -102,6 +108,32 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _loginLogoutButton() {
+    return TextButton(
+      onPressed: () {
+        if (user.type != UserType.guest) {
+          _vm.input.onLogout.add(true);
+          return;
+        }
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const LoginScreen();
+            },
+          ),
+        ).then((_) => _vm.input.onStart.add(true));
+      },
+      child: Text(
+        user.type == UserType.guest ? "Log in" : "Log out",
+        style: const TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+          // decoration: TextDecoration.underline,
         ),
       ),
     );
