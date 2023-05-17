@@ -3,6 +3,7 @@ import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/screens/add_screen/add_desk_screen.dart';
 import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_screen.dart';
+import 'package:mobile_app/screens/home_screen/home_screen.dart';
 import 'package:mobile_app/screens/login_screen/login_screen.dart';
 
 void main() {
@@ -79,132 +80,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: "Home Page"),
       // home: const LoginScreen(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: SafeArea(
-        child: Drawer(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              _titleWidget(
-                "Hello, User!",
-              ),
-              const Divider(height: 5, color: Colors.white),
-              _drawerButton(
-                () => _openBaseListScreen(ModelType.desk),
-                ModelMapper.screenTitle(ModelType.desk),
-              ),
-              const Divider(height: 2, color: Colors.white),
-              _drawerButton(
-                () => _openBaseListScreen(ModelType.deskRequest),
-                ModelMapper.screenTitle(ModelType.deskRequest),
-              ),
-              const Divider(height: 2, color: Colors.white),
-              _drawerButton(
-                () => _openBaseListScreen(ModelType.order),
-                ModelMapper.screenTitle(ModelType.order),
-              ),
-              const Divider(height: 2, color: Colors.white),
-              _drawerButton(
-                () => _openBaseListScreen(ModelType.room),
-                ModelMapper.screenTitle(ModelType.room),
-              ),
-              const Divider(height: 2, color: Colors.white),
-              _drawerButton(
-                () => _openBaseListScreen(ModelType.user),
-                ModelMapper.screenTitle(ModelType.user),
-              ),
-              const Divider(height: 2, color: Colors.white),
-              _drawerButton(
-                () => _openBaseListScreen(ModelType.waitingPerson),
-                ModelMapper.screenTitle(ModelType.waitingPerson),
-              ),
-            ],
-          ),
-        ),
-      ),
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(),
-    );
-  }
-
-  Widget _titleWidget(String text) {
-    return Container(
-      color: Colors.blue,
-      height: 60,
-      padding: const EdgeInsets.only(left: 10),
-      width: double.infinity,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              text,
-              style: const TextStyle(fontSize: 30),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _drawerButton(VoidCallback? onTap, String text) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pop();
-        onTap?.call();
-      },
-      child: Ink(
-        color: Colors.blue,
-        height: 50,
-        padding: const EdgeInsets.only(left: 10),
-        width: double.infinity,
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 18),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _openBaseListScreen(ModelType type) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return BaseListScreen(
-            modelType: type,
-          );
-        },
-      ),
     );
   }
 }

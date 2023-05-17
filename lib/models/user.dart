@@ -62,7 +62,7 @@ enum UserType {
 
 extension UserTypeExtension on UserType {
   static UserType fromString(String? v) {
-    if (v == "loggedIn") {
+    if (v == "LOGGED_IN") {
       return UserType.loggedIn;
     }
     if (v == "ADMIN") {
@@ -74,11 +74,11 @@ extension UserTypeExtension on UserType {
   String get stringValue {
     switch (this) {
       case UserType.loggedIn:
-        return "logged in user";
+        return "LOGGED_IN";
       case UserType.admin:
-        return "admin";
+        return "ADMIN";
       case UserType.guest:
-        return "guest user";
+        return "GUEST";
     }
   }
 }
