@@ -89,6 +89,12 @@ class _DeskListScreenState extends State<DeskListScreen> {
                         (e) => DeskCell(
                           desk: e,
                           onTap: () {
+                            // i think each desk should have a status
+                            // assign a color to the cell
+                            // GREEN/BLUE   -> AVAILABLE
+                            // GREEN for my reservation?
+                            // ORANGE -> UNKNOWN
+                            // RED    -> RESERVED
                             debugPrint("open desk request screen");
                           },
                         ),
@@ -135,7 +141,8 @@ class DeskCell extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           width: double.infinity,
-          color: Theme.of(context).cardColor,
+          // color: Theme.of(context).cardColor,
+          color: Colors.blue,
           padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
