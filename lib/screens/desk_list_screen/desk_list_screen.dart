@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/desk.dart';
 import 'package:mobile_app/models/ui_model.dart';
-import 'package:mobile_app/screens/base_list_screen/base_list_view_model.dart';
 import 'package:mobile_app/screens/base_list_screen/list_title_widget.dart';
+import 'package:mobile_app/screens/desk_list_screen/desk_list_view_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DeskListScreen extends StatefulWidget {
+  final int? roomId;
   const DeskListScreen({
     Key? key,
+    this.roomId,
   }) : super(key: key);
 
   @override
@@ -17,7 +19,7 @@ class DeskListScreen extends StatefulWidget {
 
 class _DeskListScreenState extends State<DeskListScreen> {
   late List<Desk> deskList = [];
-  late BaseListViewModel<Desk> vm;
+  late DeskListViewModel vm;
   bool isError = false;
   bool isLoading = false;
 
@@ -25,21 +27,18 @@ class _DeskListScreenState extends State<DeskListScreen> {
   initState() {
     super.initState();
 
-    vm = BaseListViewModel<Desk>(
+    vm = DeskListViewModel(
       Input(
         PublishSubject(),
         PublishSubject(),
-        PublishSubject(),
-        PublishSubject(),
       ),
-      ModelType.desk,
     );
     vm.output.onStart.listen((data) {
       setState(() {
         debugPrint("${data.state}");
         switch (data.state) {
           case UIState.success:
-            deskList = (data.data!.map((e) => e as Desk).toList());
+            deskList = data.data!;
             isLoading = false;
             isError = false;
             break;
@@ -58,7 +57,7 @@ class _DeskListScreenState extends State<DeskListScreen> {
         }
       });
     });
-    vm.input.onStart.add(true);
+    vm.input.onStart.add(widget.roomId);
   }
 
   @override
@@ -80,7 +79,8 @@ class _DeskListScreenState extends State<DeskListScreen> {
                           children: [
                             ElevatedButton(
                               child: const Text("Refresh"),
-                              onPressed: () => vm.input.onStart.add(true),
+                              onPressed: () =>
+                                  vm.input.onStart.add(widget.roomId),
                             ),
                           ],
                         ),
@@ -89,12 +89,6 @@ class _DeskListScreenState extends State<DeskListScreen> {
                         (e) => DeskCell(
                           desk: e,
                           onTap: () {
-                            // i think each desk should have a status
-                            // assign a color to the cell
-                            // GREEN/BLUE   -> AVAILABLE
-                            // GREEN for my reservation?
-                            // ORANGE -> UNKNOWN
-                            // RED    -> RESERVED
                             debugPrint("open desk request screen");
                           },
                         ),
@@ -116,7 +110,7 @@ class _DeskListScreenState extends State<DeskListScreen> {
               alignment: Alignment.center,
               child: ElevatedButton(
                 child: const Text("Refresh"),
-                onPressed: () => vm.input.onStart.add(true),
+                onPressed: () => vm.input.onStart.add(widget.roomId),
               ),
             ),
     );

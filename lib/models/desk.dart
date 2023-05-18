@@ -7,15 +7,18 @@ class Desk extends BaseModel {
   final int? length;
   final double? tariff;
   final TariffType? tariffType;
+  final int? roomId;
+  final DeskStatus? deskStatus;
 
   Desk({
-    // required int id,
     required this.id,
     this.width,
     this.height,
     this.length,
     this.tariff,
     this.tariffType,
+    this.roomId,
+    this.deskStatus,
   });
   // : super(id: id);
 
@@ -26,7 +29,9 @@ class Desk extends BaseModel {
       height: json["height"],
       length: json["length"],
       tariff: json["tariff"],
-      tariffType: TariffTypeExtension.fromString(json["tariff_type"]),
+      tariffType: TariffTypeExtension.fromString(json["tariffType"]),
+      deskStatus: DeskStatusExtension.fromString(json["status"]),
+      roomId: json["roomId"],
     );
   }
 
@@ -38,6 +43,8 @@ class Desk extends BaseModel {
     int? length,
     double? tariff,
     TariffType? tariffType,
+    int? roomId,
+    DeskStatus? deskStatus,
   }) {
     return Desk(
       id: id ?? this.id,
@@ -46,6 +53,8 @@ class Desk extends BaseModel {
       length: length ?? this.length,
       tariff: tariff ?? this.tariff,
       tariffType: tariffType ?? this.tariffType,
+      roomId: roomId ?? this.roomId,
+      deskStatus: deskStatus ?? this.deskStatus,
     );
   }
 
@@ -58,6 +67,8 @@ class Desk extends BaseModel {
       "length": length,
       "tariff": tariff,
       "tariff_type": tariffType?.stringValue.toUpperCase(),
+      "status": deskStatus?.stringValue.toUpperCase(),
+      "room_id": roomId,
     };
   }
 
@@ -71,7 +82,9 @@ class Desk extends BaseModel {
       "\$$tariff/${tariffType?.stringValue}",
       "W: $width",
       "L: $length",
-      "H: $height"
+      "H: $height",
+      "room id : $roomId",
+      "status : ${deskStatus?.stringValue}",
     ];
   }
 }
@@ -98,6 +111,35 @@ extension TariffTypeExtension on TariffType {
         return "hour";
       case TariffType.day:
         return "day";
+    }
+  }
+}
+
+enum DeskStatus {
+  reserved,
+  available,
+  unknown,
+}
+
+extension DeskStatusExtension on DeskStatus {
+  static DeskStatus fromString(String? v) {
+    if (v == "RESERVED") {
+      return DeskStatus.reserved;
+    }
+    if (v == "AVAILABLE") {
+      return DeskStatus.available;
+    }
+    return DeskStatus.unknown;
+  }
+
+  String get stringValue {
+    switch (this) {
+      case DeskStatus.reserved:
+        return "reserved";
+      case DeskStatus.available:
+        return "available";
+      case DeskStatus.unknown:
+        return "unknown";
     }
   }
 }
