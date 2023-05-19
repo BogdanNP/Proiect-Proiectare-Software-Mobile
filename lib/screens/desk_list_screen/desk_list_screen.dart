@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/desk.dart';
 import 'package:mobile_app/models/ui_model.dart';
+import 'package:mobile_app/models/user.dart';
 import 'package:mobile_app/screens/base_list_screen/list_title_widget.dart';
+import 'package:mobile_app/screens/create_desk_request_screen/create_desk_request_screen.dart';
 import 'package:mobile_app/screens/desk_list_screen/desk_list_view_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DeskListScreen extends StatefulWidget {
   final int? roomId;
+  final User user;
   const DeskListScreen({
     Key? key,
     this.roomId,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -28,6 +32,7 @@ class _DeskListScreenState extends State<DeskListScreen> {
     super.initState();
 
     vm = DeskListViewModel(
+      widget.roomId,
       Input(
         PublishSubject(),
         PublishSubject(),
@@ -57,7 +62,7 @@ class _DeskListScreenState extends State<DeskListScreen> {
         }
       });
     });
-    vm.input.onStart.add(widget.roomId);
+    vm.input.onStart.add(true);
   }
 
   @override
@@ -79,17 +84,29 @@ class _DeskListScreenState extends State<DeskListScreen> {
                           children: [
                             ElevatedButton(
                               child: const Text("Refresh"),
-                              onPressed: () =>
-                                  vm.input.onStart.add(widget.roomId),
+                              onPressed: () => vm.input.onStart.add(true),
                             ),
                           ],
                         ),
                       ),
                       ...deskList.map(
-                        (e) => DeskCell(
-                          desk: e,
+                        (desk) => DeskCell(
+                          desk: desk,
                           onTap: () {
-                            debugPrint("open desk request screen");
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return CreateDeskRequestScreen(
+                                    desk: desk,
+                                    user: widget.user,
+                                    saveDeskRequest: (deskRequest) {
+                                      debugPrint("${deskRequest.toJson()}");
+                                      vm.input.onDeskRequest.add(deskRequest);
+                                    },
+                                  );
+                                },
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -110,7 +127,7 @@ class _DeskListScreenState extends State<DeskListScreen> {
               alignment: Alignment.center,
               child: ElevatedButton(
                 child: const Text("Refresh"),
-                onPressed: () => vm.input.onStart.add(widget.roomId),
+                onPressed: () => vm.input.onStart.add(true),
               ),
             ),
     );

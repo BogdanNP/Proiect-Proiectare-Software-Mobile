@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/room.dart';
 import 'package:mobile_app/models/ui_model.dart';
+import 'package:mobile_app/models/user.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_view_model.dart';
 import 'package:mobile_app/screens/base_list_screen/list_title_widget.dart';
 import 'package:mobile_app/screens/desk_list_screen/desk_list_screen.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RoomListScreen extends StatefulWidget {
+  final User user;
   const RoomListScreen({
     Key? key,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -93,7 +96,10 @@ class _RoomListScreenState extends State<RoomListScreen> {
                             debugPrint("open room details screen");
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
-                              return DeskListScreen();
+                              return DeskListScreen(
+                                roomId: e.id,
+                                user: widget.user,
+                              );
                             }));
                           },
                         ),

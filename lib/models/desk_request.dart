@@ -1,3 +1,4 @@
+import 'package:mobile_app/app_utils.dart';
 import 'package:mobile_app/models/base_model.dart';
 import 'package:intl/intl.dart';
 
@@ -54,10 +55,8 @@ class DeskRequest extends BaseModel {
       "id": id,
       "user_id": userId,
       "desk_id": deskId,
-      "start_date":
-          DateFormat("dd-MM-yyyy-hh:mm:ss").format(startDate ?? DateTime.now()),
-      "end_date":
-          DateFormat("dd-MM-yyyy-hh:mm:ss").format(endDate ?? DateTime.now()),
+      "start_date": AppUtils.formatDate(startDate),
+      "end_date": AppUtils.formatDate(endDate),
       "status": deskStatus?.stringValue.toUpperCase(),
     };
   }
@@ -71,8 +70,8 @@ class DeskRequest extends BaseModel {
       "id: $id",
       "user_id: $userId",
       "desk_id: $deskId",
-      "start_date: ${DateFormat("dd-MM-yyyy-hh:mm:ss").format(startDate ?? DateTime.now())}",
-      "end_date: ${DateFormat("dd-MM-yyyy-hh:mm:ss").format(endDate ?? DateTime.now())}",
+      "start_date: ${AppUtils.formatDate(startDate)}",
+      "end_date: ${AppUtils.formatDate(endDate)}",
       "status: ${deskStatus?.stringValue}",
     ];
   }

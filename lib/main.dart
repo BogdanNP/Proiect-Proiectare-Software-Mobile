@@ -41,13 +41,14 @@ void main() {
 //  -show orders screen: -> *can see all orders
 //                       -> *can pay order
 
-// TODO: create "Login Screen"
-// TODO: update Desk to store the room id, and remove deskList from Room
-// TODO:
+// TODO: create "Login Screen" -> DONE
+// TODO: update Desk to store the room id, and remove deskList from Room -> DONE
 
 // TODO: target -> be able to create full flows:
 // TODO: create the logic then create the screens
 // TODO: create the endpoint/request service first -> repo -> vm -> screen
+// TODO:
+
 // Create account
 
 // Login as User -> check room -> select desk -> get desk request
@@ -60,6 +61,13 @@ void main() {
 // -> get notification when its status was changed
 
 // Login as User -> check my requests / past orders
+
+// When user creates a desk request -> update the desk status
+// After the desk request is completed -> update the desk status
+// Maybe make the completion automatically -> after the duration has passed
+// change the desk status
+
+// create my requests screen -> get all the desk requests for a specific user
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

@@ -5,6 +5,7 @@ import 'package:mobile_app/models/user.dart';
 import 'package:mobile_app/screens/add_screen/add_desk_screen.dart';
 import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_screen.dart';
+import 'package:mobile_app/screens/desk_request_list_screen/desk_request_list_screen.dart';
 import 'package:mobile_app/screens/home_screen/home_screen_view_model.dart';
 import 'package:mobile_app/screens/login_screen/login_screen.dart';
 import 'package:mobile_app/screens/room_list_screen/room_list_screen.dart';
@@ -70,12 +71,31 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return const RoomListScreen();
-                }));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RoomListScreen(
+                        user: user,
+                      );
+                    },
+                  ),
+                );
               },
               child: const Text("Room List"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return DeskRequestListScreen(
+                        user: user,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: const Text("My Desk Requests"),
             ),
           ],
         ),
