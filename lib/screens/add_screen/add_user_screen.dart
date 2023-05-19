@@ -17,8 +17,6 @@ class AddUserScreen extends StatefulWidget {
 
 class _AddUserScreenState extends State<AddUserScreen> {
   late TextEditingController _usernameController;
-  late TextEditingController _passwordController;
-  late TextEditingController _totalController;
   late UserType _selectedType;
 
   @override
@@ -42,27 +40,13 @@ class _AddUserScreenState extends State<AddUserScreen> {
           children: [
             TextFormField(
               decoration: const InputDecoration(
-                label: Text("user id"),
+                label: Text("username"),
               ),
-              keyboardType: TextInputType.number,
               controller: _usernameController,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                label: Text("desk id"),
-              ),
-              keyboardType: TextInputType.number,
-              controller: _passwordController,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                label: Text("start date"),
-              ),
-              controller: _totalController,
             ),
             DropdownButtonFormField(
               decoration: const InputDecoration(
-                label: Text("desk status"),
+                label: Text("user type"),
               ),
               items: UserType.values
                   .map(

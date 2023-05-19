@@ -66,7 +66,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
             ),
             DropdownButtonFormField(
               decoration: const InputDecoration(
-                label: Text("desk status"),
+                label: Text("order status"),
               ),
               items: OrderStatus.values
                   .map(
