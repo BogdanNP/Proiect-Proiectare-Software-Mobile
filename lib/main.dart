@@ -74,6 +74,8 @@ void main() {
 
 // create my requests screen -> get all the desk requests for a specific user -> DONE
 
+// TODO: check the logic and make all work :D
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
