@@ -24,15 +24,28 @@ class DeskRequestListViewModel {
       return deskListStream();
     });
 
-    output = Output(onStart);
+    Stream<UIModel<List<DeskRequest>>> onUpdate = input.onUpdate.flatMap(
+      (deskRequest) {
+        return _deskRequestRepo.updateDeskRequest(deskRequest).flatMap((_) {
+          return deskListStream();
+        });
+      },
+    );
+
+    output = Output(MergeStream([
+      onStart,
+      onUpdate,
+    ]));
   }
 }
 
 class Input {
   final Subject<bool> onStart;
+  final Subject<DeskRequest> onUpdate;
 
   Input(
     this.onStart,
+    this.onUpdate,
   );
 }
 

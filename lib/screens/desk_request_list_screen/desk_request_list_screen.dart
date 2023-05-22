@@ -32,6 +32,7 @@ class _DeskRequestListScreenState extends State<DeskRequestListScreen> {
       widget.user.id,
       Input(
         PublishSubject(),
+        PublishSubject(),
       ),
     );
     vm.output.onStart.listen((data) {
@@ -65,7 +66,7 @@ class _DeskRequestListScreenState extends State<DeskRequestListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const BaseTitleWidget(ModelType.desk),
+        title: const BaseTitleWidget(ModelType.deskRequest),
       ),
       body: !isError
           ? Stack(
@@ -88,7 +89,25 @@ class _DeskRequestListScreenState extends State<DeskRequestListScreen> {
                       ...deskRequestList.map(
                         (deskRequest) => DeskRequestCell(
                           deskRequest: deskRequest,
-                          onTap: () {},
+                          onTap: () {
+                            switch (deskRequest.deskStatus) {
+                              case DeskRequestStatus.reserved:
+                                vm.input.onUpdate.add(
+                                  deskRequest.copyWith(
+                                      deskStatus: DeskRequestStatus.current),
+                                );
+                                break;
+                              case DeskRequestStatus.current:
+                                vm.input.onUpdate.add(
+                                  deskRequest.copyWith(
+                                      deskStatus: DeskRequestStatus.finished),
+                                );
+                                break;
+                              case DeskRequestStatus.finished:
+                              default:
+                                break;
+                            }
+                          },
                         ),
                       ),
                     ],

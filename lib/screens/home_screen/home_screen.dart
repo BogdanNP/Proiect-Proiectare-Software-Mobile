@@ -5,6 +5,7 @@ import 'package:mobile_app/models/user.dart';
 import 'package:mobile_app/screens/add_screen/add_desk_screen.dart';
 import 'package:mobile_app/screens/add_screen/add_screen.dart';
 import 'package:mobile_app/screens/base_list_screen/base_list_screen.dart';
+import 'package:mobile_app/screens/desk_list_screen/desk_list_screen.dart';
 import 'package:mobile_app/screens/desk_request_list_screen/desk_request_list_screen.dart';
 import 'package:mobile_app/screens/home_screen/home_screen_view_model.dart';
 import 'package:mobile_app/screens/login_screen/login_screen.dart';
@@ -96,6 +97,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: const Text("My Desk Requests"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return DeskListScreen(
+                        showOnlySubscribed: true,
+                        user: user,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: const Text("Subscribed Desks"),
             ),
           ],
         ),

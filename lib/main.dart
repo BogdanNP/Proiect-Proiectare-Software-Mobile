@@ -16,29 +16,29 @@ void main() {
 // show menu depending of the type of user (guest/user/admin)
 
 // guest:
-//  -show rooms screen
-//  -show desks screen
+//  -show rooms screen -> DONE
+//  -show desks screen -> DONE // hide the status
 
 // user:
-//  -show rooms screen
-//  -show desks screen:  -> can see the current status
-//                       -> can make a desk request
-//                       -> can subscribe to the waiting list
-//                       -> *can see their requests
+//  -show rooms screen  -> DONE
+//  -show desks screen:  -> can see the current status -> DONE
+//                       -> can make a desk request -> DONE
+//                       -> can subscribe to the waiting list -> DONE
+//                       -> can see their requests -> DONE
 //  -show orders screen: -> *can see their orders
 //                       -> *can pay order
 
 // admin:
-//  -> can create/update/delete anything
-//  -show users screen
-//  -show rooms screen
-//  -show desk requests screen
-//  -show waiting list screen
-//  -show desks screen:  -> can see the current status
-//                       -> can make a desk request
-//                       -> can subscribe to the waiting list
-//                       -> *can see all requests
-//  -show orders screen: -> *can see all orders
+//  -> can create/update/delete anything -> DOME
+//  -show users screen -> DONE
+//  -show rooms screen -> DONE
+//  -show desk requests screen -> DONE
+//  -show waiting list screen -> DONE
+//  -show desks screen:  -> can see the current status -> DONE
+//                       -> can make a desk request -> DONE
+//                       -> can subscribe to the waiting list -> DONE
+//                       -> can see all requests -> DONE
+//  -show orders screen: -> can see all orders -> DONE
 //                       -> *can pay order
 
 // TODO: create "Login Screen" -> DONE
@@ -54,6 +54,11 @@ void main() {
 // Login as User -> check room -> select desk -> get desk request
 // -> complete desk request -> pay order
 
+// how to complete desk requests:
+// show the time left -> if the time passes and the user did not check out
+// then count it as extra time ??? what about the case when there are 2
+// desk requests, one after another ???
+
 // Login as User -> check room -> select desk -> get desk request
 // -> cancel desk request
 
@@ -67,7 +72,7 @@ void main() {
 // Maybe make the completion automatically -> after the duration has passed
 // change the desk status
 
-// create my requests screen -> get all the desk requests for a specific user
+// create my requests screen -> get all the desk requests for a specific user -> DONE
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

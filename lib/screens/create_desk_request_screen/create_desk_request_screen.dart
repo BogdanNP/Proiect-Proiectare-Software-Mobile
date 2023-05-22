@@ -66,9 +66,10 @@ class _CreateDeskRequestScreenState extends State<CreateDeskRequestScreen> {
                   deskId: widget.desk.id,
                   startDate: DateTime.tryParse(_startDateController.text),
                   endDate: DateTime.tryParse(_endDateController.text),
+                  deskStatus: DeskRequestStatus.reserved,
                 );
                 widget.saveDeskRequest(newDeskRequest);
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               },
               child: const Text("Save"),
             ),

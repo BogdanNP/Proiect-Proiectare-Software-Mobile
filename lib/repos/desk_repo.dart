@@ -12,8 +12,11 @@ class DeskRepo {
   }
 
   Future<List<Desk>> _getDeskList(int? roomId) async {
-    List<Map<String, dynamic>> jsonDataList = (await _generalService
-        .getDataList("${AppValues.deskPath}${AppValues.roomPath}?id=$roomId"));
+    List<Map<String, dynamic>> jsonDataList = roomId == null
+        ? (await _generalService
+            .getDataList("${AppValues.deskPath}${AppValues.listPath}"))
+        : (await _generalService.getDataList(
+            "${AppValues.deskPath}${AppValues.roomPath}?id=$roomId"));
     return jsonDataList.map((e) => Desk.fromJson(e)).toList();
   }
 }

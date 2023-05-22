@@ -3,18 +3,22 @@ import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/desk.dart';
 import 'package:mobile_app/models/ui_model.dart';
 import 'package:mobile_app/models/user.dart';
+import 'package:mobile_app/models/waiting_person.dart';
 import 'package:mobile_app/screens/base_list_screen/list_title_widget.dart';
 import 'package:mobile_app/screens/create_desk_request_screen/create_desk_request_screen.dart';
 import 'package:mobile_app/screens/desk_list_screen/desk_list_view_model.dart';
+import 'package:mobile_app/screens/desk_request_list_screen/desk_request_list_screen.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DeskListScreen extends StatefulWidget {
   final int? roomId;
   final User user;
+  final bool showOnlySubscribed;
   const DeskListScreen({
     Key? key,
     this.roomId,
     required this.user,
+    this.showOnlySubscribed = false,
   }) : super(key: key);
 
   @override
@@ -23,6 +27,7 @@ class DeskListScreen extends StatefulWidget {
 
 class _DeskListScreenState extends State<DeskListScreen> {
   late List<Desk> deskList = [];
+  late List<Desk> subscribedDeskList = [];
   late DeskListViewModel vm;
   bool isError = false;
   bool isLoading = false;
@@ -33,7 +38,10 @@ class _DeskListScreenState extends State<DeskListScreen> {
 
     vm = DeskListViewModel(
       widget.roomId,
+      widget.user.id,
       Input(
+        PublishSubject(),
+        PublishSubject(),
         PublishSubject(),
         PublishSubject(),
       ),
@@ -62,8 +70,39 @@ class _DeskListScreenState extends State<DeskListScreen> {
         }
       });
     });
+
+    vm.output.subscribedDeskList.listen((data) {
+      setState(() {
+        debugPrint("${data.state}");
+        switch (data.state) {
+          case UIState.success:
+            subscribedDeskList = data.data!;
+            subscribedDeskList.forEach((element) {
+              debugPrint("${element.toJson()}");
+            });
+            isLoading = false;
+            isError = false;
+            break;
+          case UIState.error:
+            debugPrint("${data.error}");
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("${data.error}")));
+            isError = false;
+            isLoading = false;
+            break;
+          case UIState.loading:
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(SnackBar(content: Text("Loading...")));
+            isLoading = true;
+            break;
+        }
+      });
+    });
     vm.input.onStart.add(true);
   }
+
+  List<Desk> get _deskList =>
+      widget.showOnlySubscribed ? subscribedDeskList : deskList;
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +128,15 @@ class _DeskListScreenState extends State<DeskListScreen> {
                           ],
                         ),
                       ),
-                      ...deskList.map(
+                      ..._deskList.map(
                         (desk) => DeskCell(
                           desk: desk,
+                          subscribeEnable:
+                              true, //widget.user.type != UserType.guest,
+                          tapEnable: true, //widget.user.type != UserType.guest,
+                          isSubscribed: subscribedDeskList
+                              .where((e) => e.id == desk.id)
+                              .isNotEmpty,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -106,7 +151,32 @@ class _DeskListScreenState extends State<DeskListScreen> {
                                   );
                                 },
                               ),
-                            );
+                            ).then((value) {
+                              if (value) {
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return DeskRequestListScreen(
+                                          user: widget.user);
+                                    },
+                                  ),
+                                );
+                              }
+                            });
+                          },
+                          onSubscribeTap: () {
+                            if (subscribedDeskList
+                                .where((e) => e.id == desk.id)
+                                .isNotEmpty) {
+                              vm.input.onUnsubscribe.add(widget.user.id);
+                            } else {
+                              vm.input.onSubscribe.add(WaitingPerson(
+                                userId: widget.user.id,
+                                deskId: desk.id,
+                              ));
+                            }
                           },
                         ),
                       ),
@@ -136,12 +206,20 @@ class _DeskListScreenState extends State<DeskListScreen> {
 
 class DeskCell extends StatelessWidget {
   final VoidCallback? onTap;
+  final VoidCallback? onSubscribeTap;
   final Desk desk;
+  final bool subscribeEnable;
+  final bool tapEnable;
+  final bool isSubscribed;
 
   const DeskCell({
     Key? key,
     required this.desk,
     this.onTap,
+    this.onSubscribeTap,
+    this.tapEnable = false,
+    this.subscribeEnable = false,
+    this.isSubscribed = false,
   }) : super(key: key);
 
   @override
@@ -149,15 +227,27 @@ class DeskCell extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: InkWell(
-        onTap: onTap,
+        onTap: tapEnable ? onTap : null,
         child: Ink(
           width: double.infinity,
           // color: Theme.of(context).cardColor,
           color: Colors.blue,
           padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: desk.getDisplayData().map((t) => Text(t)).toList(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...desk.getDisplayData().map((t) => Text(t)),
+                ],
+              ),
+              if (subscribeEnable)
+                ElevatedButton(
+                  onPressed: onSubscribeTap,
+                  child: Text(isSubscribed ? "Unsubscribe" : "Subscribe"),
+                )
+            ],
           ),
         ),
       ),

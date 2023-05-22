@@ -51,6 +51,27 @@ class GeneralService {
     }
   }
 
+  Future<Map<String, dynamic>> getData(String path) async {
+    http.Response response =
+        await http.get(Uri.parse("${AppValues.apiUrl}$path"));
+    debugPrint("PATH: [${AppValues.apiUrl}$path]");
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      if (jsonResponse["status"] == "SUCCESS") {
+        debugPrint("ResponseStatus: SUCCESS");
+        return (jsonResponse["data"]) as Map<String, dynamic>;
+      }
+      if (jsonResponse["status"] == "ERROR") {
+        debugPrint("ResponseStatus: ERROR");
+        throw Exception(jsonResponse["message"]);
+      }
+      return {};
+    } else {
+      debugPrint("ResponseStatus: FAILED");
+      throw Exception('Failed to load.');
+    }
+  }
+
   Future<Map<String, dynamic>> updateData(
     String path,
     Map<String, dynamic> updateObject,
