@@ -1,11 +1,36 @@
 import 'dart:convert';
 
+import 'package:mobile_app/app_values.dart';
+import 'package:mobile_app/models/model_mapper.dart';
 import 'package:mobile_app/models/user.dart';
+import 'package:mobile_app/repos/general_repo.dart';
+import 'package:mobile_app/screens/login_screen/login_view_model.dart';
+import 'package:mobile_app/services/general_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserStateRepo {
+class UserRepo {
   SharedPreferences? _sharedPreferences;
+  final GeneralService _generalRepo;
+
+  UserRepo() : _generalRepo = GeneralService();
+
+  Stream<User> login(LoginInput loginInput) {
+    return _generalRepo
+        .updateData(
+            "${AppValues.userPath}${AppValues.loginPath}", loginInput.toJson())
+        .asStream()
+        .map((jsonData) => User.fromJson(jsonData["data"]))
+        .flatMap((user) => setUser(user).map((_) => user));
+  }
+
+  Stream<User> register(LoginInput loginInput) {
+    return _generalRepo
+        .updateData("${AppValues.userPath}${AppValues.registerPath}",
+            loginInput.toJson())
+        .asStream()
+        .map((event) => User.fromJson(event));
+  }
 
   Stream<User?> getUser() {
     return _getPreferences().map(

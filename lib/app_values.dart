@@ -12,4 +12,7 @@ abstract class AppValues {
   static String roomPath = "/room";
   static String userPath = "/user";
   static String waitingListPath = "/waiting_list";
+
+  static String loginPath = "/login";
+  static String registerPath = "/register";
 }

@@ -1,16 +1,16 @@
 import 'package:mobile_app/models/ui_model.dart';
 import 'package:mobile_app/models/user.dart';
-import 'package:mobile_app/repos/user_state_repo.dart';
+import 'package:mobile_app/repos/user_repo.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreenViewModel {
-  final UserStateRepo _userStateRepo;
+  final UserRepo _userStateRepo;
   final Input input;
   late Output output;
 
   Stream<User?> _userStream() => _userStateRepo.getUser();
 
-  HomeScreenViewModel(this.input) : _userStateRepo = UserStateRepo() {
+  HomeScreenViewModel(this.input) : _userStateRepo = UserRepo() {
     Stream<UIModel<User?>> onLogout = input.onLogout.flatMap((_) {
       return _userStateRepo.removeUser().map(
             (_) => UIModel.success(User(id: -1, type: UserType.guest)),
