@@ -17,16 +17,17 @@ class UserRepo {
 
   Stream<User> login(LoginInput loginInput) {
     return _generalRepo
-        .updateData(
+        .uploadData(
             "${AppValues.userPath}${AppValues.loginPath}", loginInput.toJson())
         .asStream()
-        .map((jsonData) => User.fromJson(jsonData["data"]))
-        .flatMap((user) => setUser(user).map((_) => user));
+        .map((jsonData) {
+      return User.fromJson(jsonData);
+    }).flatMap((user) => setUser(user).map((_) => user));
   }
 
   Stream<User> register(LoginInput loginInput) {
     return _generalRepo
-        .updateData("${AppValues.userPath}${AppValues.registerPath}",
+        .uploadData("${AppValues.userPath}${AppValues.registerPath}",
             loginInput.toJson())
         .asStream()
         .map((event) => User.fromJson(event));
