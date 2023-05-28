@@ -53,68 +53,98 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SafeArea(
-        child: Drawer(
-          child: _drawerContent(),
+      drawer: _drawerContent(),
+      appBar: _appBar(),
+      body: _contentWidget(),
+    );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(widget.title),
+          _loginLogoutButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _contentWidget() {
+    return Center(
+      child: Column(
+        children: [
+          _button(
+            _openUserRoomListScreen,
+            "Room List",
+          ),
+          if (user.type != UserType.guest)
+            _button(
+              _openUserDeskRequestListScreen,
+              "My Desk Requests",
+            ),
+          if (user.type != UserType.guest)
+            _button(
+              _openUserWaitingListScreen,
+              "Subscribed Desks",
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _button(VoidCallback? onTap, String text) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: InkWell(
+        onTap: onTap,
+        child: Ink(
+          color: Colors.blue,
+          height: 100,
+          padding: const EdgeInsets.only(left: 10),
+          width: double.infinity,
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
         ),
       ),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(widget.title),
-            _loginLogoutButton(),
-          ],
-        ),
+    );
+  }
+
+  void _openUserRoomListScreen() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return RoomListScreen(
+        user: user,
+      );
+    }));
+  }
+
+  void _openUserDeskRequestListScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return DeskRequestListScreen(
+            user: user,
+          );
+        },
       ),
-      body: Center(
-        child: Column(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RoomListScreen(
-                        user: user,
-                      );
-                    },
-                  ),
-                );
-              },
-              child: const Text("Room List"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return DeskRequestListScreen(
-                        user: user,
-                      );
-                    },
-                  ),
-                );
-              },
-              child: const Text("My Desk Requests"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return DeskListScreen(
-                        showOnlySubscribed: true,
-                        user: user,
-                      );
-                    },
-                  ),
-                );
-              },
-              child: const Text("Subscribed Desks"),
-            ),
-          ],
-        ),
+    );
+  }
+
+  void _openUserWaitingListScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return DeskListScreen(
+            showOnlySubscribed: true,
+            user: user,
+          );
+        },
       ),
     );
   }
@@ -122,8 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _titleWidget(String text) {
     return Container(
       color: Colors.blue,
-      height: 60,
-      padding: const EdgeInsets.only(left: 10),
+      height: 80,
+      padding:
+          EdgeInsets.only(left: 10, top: MediaQuery?.of(context).padding.top),
       width: double.infinity,
       child: Align(
         alignment: Alignment.centerLeft,
@@ -197,45 +228,77 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _drawerContent() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        _titleWidget(
-          user.type == UserType.guest ? "Hello!" : "Hello, ${user.username}!",
-        ),
-        const Divider(height: 5, color: Colors.white),
-        _drawerButton(
-          () => _openBaseListScreen(ModelType.desk),
-          ModelMapper.screenTitle(ModelType.desk),
-        ),
-        const Divider(height: 2, color: Colors.white),
-        _drawerButton(
-          () => _openBaseListScreen(ModelType.deskRequest),
-          ModelMapper.screenTitle(ModelType.deskRequest),
-        ),
-        const Divider(height: 2, color: Colors.white),
-        _drawerButton(
-          () => _openBaseListScreen(ModelType.order),
-          ModelMapper.screenTitle(ModelType.order),
-        ),
-        const Divider(height: 2, color: Colors.white),
-        _drawerButton(
-          () => _openBaseListScreen(ModelType.room),
-          ModelMapper.screenTitle(ModelType.room),
-        ),
-        const Divider(height: 2, color: Colors.white),
-        _drawerButton(
-          () => _openBaseListScreen(ModelType.user),
-          ModelMapper.screenTitle(ModelType.user),
-        ),
-        const Divider(height: 2, color: Colors.white),
-        _drawerButton(
-          () => _openBaseListScreen(ModelType.waitingPerson),
-          ModelMapper.screenTitle(ModelType.waitingPerson),
-        ),
-      ],
+  Widget? _drawerContent() {
+    if (user.type == UserType.guest) {
+      return null;
+    }
+    return Drawer(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          _titleWidget(
+            user.type == UserType.guest ? "Hello!" : "Hello, ${user.username}!",
+          ),
+          const Divider(height: 5, color: Colors.white),
+          if (user.type == UserType.admin) ..._adminDrawerContent(),
+          if (user.type == UserType.loggedIn) ..._userDrawerContent(),
+        ],
+      ),
     );
+  }
+
+  List<Widget> _adminDrawerContent() {
+    return [
+      _drawerButton(
+        () => _openBaseListScreen(ModelType.desk),
+        ModelMapper.screenTitle(ModelType.desk),
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openBaseListScreen(ModelType.deskRequest),
+        ModelMapper.screenTitle(ModelType.deskRequest),
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openBaseListScreen(ModelType.order),
+        ModelMapper.screenTitle(ModelType.order),
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openBaseListScreen(ModelType.room),
+        ModelMapper.screenTitle(ModelType.room),
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openBaseListScreen(ModelType.user),
+        ModelMapper.screenTitle(ModelType.user),
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openBaseListScreen(ModelType.waitingPerson),
+        ModelMapper.screenTitle(ModelType.waitingPerson),
+      ),
+    ];
+  }
+
+  List<Widget> _userDrawerContent() {
+    return [
+      _drawerButton(
+        () => _openUserRoomListScreen(),
+        "Room List",
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openUserDeskRequestListScreen(),
+        "My Desk Requests",
+      ),
+      const Divider(height: 2, color: Colors.white),
+      _drawerButton(
+        () => _openUserWaitingListScreen(),
+        "Subscribed Desks",
+      ),
+      const Divider(height: 2, color: Colors.white),
+    ];
   }
 
   void _openBaseListScreen(ModelType type) {

@@ -146,7 +146,7 @@ class RoomCell extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           width: double.infinity,
-          color: Theme.of(context).cardColor,
+          color: Colors.blue,
           padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

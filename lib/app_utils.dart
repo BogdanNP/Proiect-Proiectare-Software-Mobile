@@ -5,6 +5,6 @@ abstract class AppUtils {
     if (dateTime == null) {
       return "";
     }
-    return DateFormat("dd-MM-yyyy-hh:mm:ss").format(dateTime);
+    return DateFormat("dd-MM-yyyy-HH:mm:ss").format(dateTime.toUtc());
   }
 }

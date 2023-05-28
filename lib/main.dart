@@ -54,13 +54,7 @@ void main() {
 // Login as User -> check room -> select desk -> get desk request
 // -> complete desk request -> pay order
 
-// how to complete desk requests:
-// show the time left -> if the time passes and the user did not check out
-// then count it as extra time ??? what about the case when there are 2
-// desk requests, one after another ???
-
 // Login as User -> check room -> select desk -> get desk request
-// -> cancel desk request
 
 // Login as User -> check room -> select desk -> subscribe to the waiting list
 // -> get notification when its status was changed

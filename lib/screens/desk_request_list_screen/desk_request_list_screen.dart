@@ -41,6 +41,9 @@ class _DeskRequestListScreenState extends State<DeskRequestListScreen> {
         switch (data.state) {
           case UIState.success:
             deskRequestList = data.data!;
+            deskRequestList.sort((a, b) {
+              return b.id - a.id;
+            });
             isLoading = false;
             isError = false;
             break;
@@ -91,7 +94,7 @@ class _DeskRequestListScreenState extends State<DeskRequestListScreen> {
                           deskRequest: deskRequest,
                           onTap: () {
                             switch (deskRequest.deskStatus) {
-                              case DeskRequestStatus.reserved:
+                              case DeskRequestStatus.future:
                                 vm.input.onUpdate.add(
                                   deskRequest.copyWith(
                                       deskStatus: DeskRequestStatus.current),
@@ -152,8 +155,11 @@ class DeskRequestCell extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           width: double.infinity,
-          // color: Theme.of(context).cardColor,
-          color: Colors.blue,
+          color: deskRequest.deskStatus == DeskRequestStatus.future
+              ? Colors.blue
+              : deskRequest.deskStatus == DeskRequestStatus.current
+                  ? Colors.green
+                  : Colors.grey,
           padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

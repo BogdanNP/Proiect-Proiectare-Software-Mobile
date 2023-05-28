@@ -79,11 +79,11 @@ class Desk extends BaseModel {
   List<String> getDisplayData() {
     return [
       "id: $id",
-      "\$$tariff/${tariffType?.stringValue}",
-      "W: $width",
-      "L: $length",
-      "H: $height",
       "room id : $roomId",
+      "tariff: \$$tariff/${tariffType?.stringValue}",
+      "width: $width",
+      "length: $length",
+      "height: $height",
       "status : ${deskStatus?.stringValue}",
     ];
   }

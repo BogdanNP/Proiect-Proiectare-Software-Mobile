@@ -78,15 +78,15 @@ class DeskRequest extends BaseModel {
 }
 
 enum DeskRequestStatus {
-  reserved,
+  future,
   current,
   finished,
 }
 
 extension DeskStatusExtension on DeskRequestStatus {
   static DeskRequestStatus? fromString(String? v) {
-    if (v == "RESERVED") {
-      return DeskRequestStatus.reserved;
+    if (v == "FUTURE") {
+      return DeskRequestStatus.future;
     }
     if (v == "CURRENT") {
       return DeskRequestStatus.current;
@@ -96,8 +96,8 @@ extension DeskStatusExtension on DeskRequestStatus {
 
   String get stringValue {
     switch (this) {
-      case DeskRequestStatus.reserved:
-        return "reserved";
+      case DeskRequestStatus.future:
+        return "future";
       case DeskRequestStatus.current:
         return "current";
       case DeskRequestStatus.finished:
