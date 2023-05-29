@@ -244,9 +244,11 @@ class DeskCell extends StatelessWidget {
         onTap: tapEnable ? onTap : null,
         child: Ink(
           width: double.infinity,
-          color: desk.deskStatus == DeskStatus.available
-              ? Colors.green
-              : Colors.orange,
+          color: userType == UserType.guest
+              ? Colors.blue
+              : desk.deskStatus == DeskStatus.available
+                  ? Colors.green
+                  : Colors.orange,
           padding: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
